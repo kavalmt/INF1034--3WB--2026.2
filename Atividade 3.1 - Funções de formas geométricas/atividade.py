@@ -3,133 +3,156 @@ import random
 t = Turtle()
 t.speed(0)
 
-#(x,y,tam,cor,qtd_lados)
+#(x,y,tam,cor)
 
-#FUNÇÃO RANDOM LOCAL
-def func_random(LimitNX,LimitX,LimitNY,LimitY):
-    x = random.randint(LimitNX,LimitX)
-    y = random.randint(LimitNY,LimitY) 
+ 
+#FUNÇÃO PLANO CARTESIANO
+def desenha_plano():
     t.pu()
-    t.goto(x, y)
+    t.goto(-400,0)
     t.pd()
-
-#FUNÇÃO QUADRANTES
-def quadrantes(x,y):
+    t.goto(400,0)
+    t.stamp()
     t.pu()
-    t.goto(x,y)
+    t.goto(0,400)
+    t.lt(90)
+    t.stamp()
     t.pd()
-
+    t.goto(0,-400)
+ 
+#FUNÇÃO RANDOM POR QUADRANTE
+def func_random(quadrante, tam):
+    if quadrante == 1:
+        x = random.randint(20+tam, 400-tam)
+        y = random.randint(20+tam, 400-tam)
+    elif quadrante == 2:
+        x = random.randint(-400+tam, -20-tam)
+        y = random.randint(20+tam, 400-tam)
+    elif quadrante == 3:
+        x = random.randint(-400+tam, -20-tam)
+        y = random.randint(-400+tam, -20-tam)
+    elif quadrante == 4:
+        x = random.randint(20+tam, 400-tam)
+        y = random.randint(-400+tam, -20-tam)
+    return x, y
+ 
 #FUNÇÃO COR
 def cor_forma():
-    var_color4 = textinput("Escolha a cor", "Digite a cor da proxima forma geometrica")
-    t.fillcolor(var_color4)
-    t.color(var_color4)
-    t.begin_fill()
-    return
-
+    cor = textinput("Escolha a cor", "Digite a cor da proxima forma geometrica")
+    return cor
+ 
 #FUNÇÃO ESPIRAL
-def espiral(tamanho):
-    for i in range(10):
-        t.circle(tamanho,180)
-        tamanho = tamanho - 10
-
-#FUNÇÃO TRIANGULO
-def triangulo():
-    for i in range(3):
-        t.fd(150)
-        t.lt(120)
-
-#FUNÇÃO LOSANGO
-def losango():
-    t.lt(180)
-    for i in range(2):
-        t.fd(100)
-        t.rt(60)
-        t.fd(100)
-        t.rt(120)
-
-#HEXAGONO
-def hexagono():
+def desenha_espiral(x, y, tam, cor):
     t.pu()
-    t.goto(250,-200)
+    t.seth(0)
+    t.goto(x, y)
     t.pd()
-    for i in range(6):
-        t.fd(100)
+    t.color(cor)
+    for i in range(10):
+        t.circle(tam, 180)
+        tam = tam - 10
+ 
+#FUNÇÃO POLIGONO GENERICO (EXTRA)
+def desenha_poligono(x, y, lados, tam, cor):
+    angulo = 360 / lados
+    t.pu()
+    t.seth(0)
+    t.goto(x, y)
+    t.pd()
+    t.pencolor(cor)
+    t.fillcolor(cor)
+    t.begin_fill()
+    for cont in range(lados):
+        t.fd(tam)
+        t.lt(angulo)
+    t.end_fill()
+ 
+#FUNÇÃO QUADRADO
+def desenha_quadrado(x, y, lado, cor):
+    t.pu()
+    t.seth(0)
+    t.goto(x, y)
+    t.pd()
+    t.pencolor(cor)
+    t.fillcolor(cor)
+    t.begin_fill()
+    for cont in range(4):
+        t.fd(lado)
+        t.lt(90)
+    t.end_fill()
+ 
+#FUNÇÃO TRIANGULO
+def desenha_triangulo(x, y, lado, cor):
+    t.pu()
+    t.seth(0)
+    t.goto(x, y)
+    t.pd()
+    t.pencolor(cor)
+    t.fillcolor(cor)
+    t.begin_fill()
+    for cont in range(3):
+        t.fd(lado)
+        t.lt(120)
+    t.end_fill()
+ 
+#FUNÇÃO LOSANGO
+def desenha_losango(x, y, lado, cor):
+    t.pu()
+    t.seth(0)
+    t.goto(x, y)
+    t.pd()
+    t.pencolor(cor)
+    t.fillcolor(cor)
+    t.begin_fill()
+    t.lt(180)
+    for cont in range(2):
+        t.fd(lado)
         t.rt(60)
-
+        t.fd(lado)
+        t.rt(120)
+    t.end_fill()
+ 
+#FUNÇÃO HEXAGONO
+def desenha_hexagono(x, y, lado, cor):
+    t.pu()
+    t.seth(0)
+    t.goto(x, y)
+    t.pd()
+    t.pencolor(cor)
+    t.fillcolor(cor)
+    t.begin_fill()
+    for cont in range(6):
+        t.fd(lado)
+        t.rt(60)
+    t.end_fill()
+ 
 #-------------------------------------------------------------------------------------------------------#
-#-------------------------------------------------------------------------------------------------------#
-
-#PLANO CARTESIANO
-t.pu()
-t.goto(-400,0) # PEGUEI A POSIÇÃO
-t.pd() # ABAIXEI A CANETA
-t.goto(400,0) #FEZ A LINHA ATE A OUTRA POSIÇÃO 
-t.stamp()
-t.pu()
-t.goto(0,400)
-t.lt(90)
-t.stamp()
-t.pd()
-t.goto(0,-400)
-
-
-# PRIMEIRO QUADRANTE (X = 0 - > 400  ; Y = 0 - > 400 )
-quadrantes(200,150)
-t.rt(90)
-
-
-#COR ESPIRAL
-cor_forma()
-#RANDOM
-func_random(100,250,100,200)
-#ESPIRAL
-print(espiral(100))
-
-#-------------------------------------------------------------------------------------------------------#
-
-# SEGUNDO QUADRANTE (X = -400 - > 0  ; Y = 0 - > 400 )
-quadrantes(-300,200)
-
-#COR TRIANGULO 
-cor_forma()
-#RANDOM
-func_random(-350,-200,100,200)
-#TRIANGULO
-triangulo()
-
-t.end_fill()
-
-#-------------------------------------------------------------------------------------------------------#
-
-# #TERCEIRO QUADRANTE (X = -400 - > 0 ; Y = -400 - > 0)
-quadrantes(-150,-200) 
-
-# COR LOSANGO
-cor_forma()
-#RANDOM
-func_random(-350,-200,-400,-100)
-#LOSANGO 
-losango()
-
-t.end_fill()
-
-#-------------------------------------------------------------------------------------------------------#
-
-# #QUARTO QUADRANTE ( X = 0 - > 400 ; Y = -400 -> 0)
-quadrantes(300,-200)
-
-#COR HEXAGONO 
-cor_forma()
-#RANDOM
-func_random(-350,-200,-400,-100)
-#HEXAGONO
-hexagono()
-
-# t.end_fill()
-
-
-
+ 
+desenha_plano()
+ 
+# PRIMEIRO QUADRANTE - ESPIRAL
+x, y = func_random(1, 100)
+cor = cor_forma()
+desenha_espiral(x, y, 100, cor)
+ 
+# SEGUNDO QUADRANTE - TRIANGULO
+x, y = func_random(2, 100)
+cor = cor_forma()
+desenha_triangulo(x, y, 100, cor)
+ 
+# TERCEIRO QUADRANTE - LOSANGO
+x, y = func_random(3, 80)
+cor = cor_forma()
+desenha_losango(x, y, 80, cor)
+ 
+# QUARTO QUADRANTE - HEXAGONO
+x, y = func_random(4, 60)
+cor = cor_forma()
+desenha_hexagono(x, y, 60, cor)
+ 
+# EXTRA pentagono
+x, y = func_random(1, 60)
+cor = cor_forma()
+desenha_poligono(x, y, 5, 60, cor)
+ 
 mainloop()
-
-
