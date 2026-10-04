@@ -12,24 +12,18 @@ imagem_tesoura = pygame.image.load("Atividade 7.0/tesoura.png")
 opcoes = ["pedra", "papel", "tesoura"]
 def jogada_computador():
     return choice(opcoes)
-
-
 def quem_ganhou(jogador, computador):
     if jogador == computador:
         return "empate"
     if (jogador == "pedra" and computador == "tesoura") or (jogador == "tesoura" and computador == "papel") or (jogador == "papel" and computador == "pedra"):
         return "jogador"
     return "computador"
-
-
 def imagem_da_jogada(jogada):
     if jogada == "pedra":
         return imagem_pedra
     if jogada == "papel":
         return imagem_papel
     return imagem_tesoura
-
-
 def escrever(texto, x, y):
     tela.blit(fonte.render(texto, True, (255, 255, 255)), (x, y))
 
@@ -39,6 +33,7 @@ pontos_computador = 0
 jogador = ""
 computador = ""
 mensagem = "Escolha a sua jogada"
+acabou = False
 
 rodando = True
 while rodando:
@@ -46,34 +41,38 @@ while rodando:
         if evento.type == pygame.QUIT:
             rodando = False
         if evento.type == pygame.KEYDOWN:
-            escolha = ""
-            if evento.key == pygame.K_1:
-                escolha = "pedra"
-            elif evento.key == pygame.K_2:
-                escolha = "papel"
-            elif evento.key == pygame.K_3:
-                escolha = "tesoura"
-            elif evento.key == pygame.K_r:
-                pontos_jogador = 0
-                pontos_computador = 0
-                jogador = ""
-                computador = ""
-                mensagem = "Jogo reiniciado! Escolha a sua jogada"
-            if escolha != "":
-                jogador = escolha
-                computador = jogada_computador()
-                resultado = quem_ganhou(jogador, computador)
-                if resultado == "empate":
-                    mensagem = "Empate!"
-                elif resultado == "jogador":
-                    pontos_jogador = pontos_jogador + 1
-                    mensagem = "Voce ganhou!"
-                else:
-                    pontos_computador = pontos_computador + 1
-                    mensagem = "Voce perdeu!"
+            if acabou == True:
+                if evento.key == pygame.K_n:
+                    rodando = False
+                if evento.key == pygame.K_s:
+                    jogador = ""
+                    computador = ""
+                    mensagem = "Escolha a sua jogada"
+                    acabou = False
+            else:
+                escolha = ""
+                if evento.key == pygame.K_1:
+                    escolha = "pedra"
+                elif evento.key == pygame.K_2:
+                    escolha = "papel"
+                elif evento.key == pygame.K_3:
+                    escolha = "tesoura"
+                if escolha != "":
+                    jogador = escolha
+                    computador = jogada_computador()
+                    resultado = quem_ganhou(jogador, computador)
+                    if resultado == "empate":
+                        mensagem = "Empate! Quer jogar de novo? (S/N)"
+                    elif resultado == "jogador":
+                        pontos_jogador = pontos_jogador + 1
+                        mensagem = "Voce ganhou! Quer jogar de novo? (S/N)"
+                    else:
+                        pontos_computador = pontos_computador + 1
+                        mensagem = "Voce perdeu! Quer jogar de novo? (S/N)"
+                    acabou = True
     tela.fill((0, 0, 0))
 
-    escrever("Aperte 1, 2 ou 3 para jogar e R para reiniciar", 50, 20)
+    escrever("Aperte 1, 2 ou 3 para jogar", 50, 20)
 
     tela.blit(imagem_pedra, (100, 70))
     tela.blit(imagem_papel, (325, 70))
