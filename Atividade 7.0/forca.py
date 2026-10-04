@@ -1,21 +1,24 @@
 from random import choice
 
-<<<<<<< HEAD
 palavras = ["banana", "maça", "abacaxi", "limao", "mamao", "pera", "melancia", "uva"]
+alfabeto = 'abcdefghijklmnopqrstuvwxyzçABCDEFGHIJKLMNOPQRSTUVWXYZÇ'
 
 
 def sortear_palavra():
     return choice(palavras)
-def mostrar_palavra(palavra):
-    print(" ".join(palavra))
-def letra_valida(letra):
-    if letra == "" or letra not in 'abcdefghijklmnopqrstuvwxyzçABCDEFGHIJKLMNOPQRSTUVWXYZÇ':
+
+
+def so_tem_letras(texto):
+    if texto == "":
         return False
+    for caractere in texto:
+        if caractere not in alfabeto:
+            return False
     return True
-def revelar_letra(letra, palavra_aleatoria, palavra_oculta):
-    for i in range(len(palavra_aleatoria)):
-        if letra == palavra_aleatoria[i]:
-            palavra_oculta[i] = letra
+
+
+def mostrar_palavra(palavra_oculta):
+    print(" ".join(palavra_oculta))
 
 
 while True:
@@ -25,72 +28,41 @@ while True:
 
     while True:
         mostrar_palavra(palavra_oculta)
+
         letra = input("Digite uma letra da palavra: ").lower()
+
+        if so_tem_letras(letra) == False:
+            print("Apenas permitido LETRAS")
+            continue
+
         if len(letra) > 1:
-            if not letra.isalpha():
-                print("Apenas permitido LETRAS")
-                continue
             if letra == palavra_aleatoria:
                 print("Você acertou a palavra!")
                 mostrar_palavra(palavra_aleatoria)
                 break
             vidas = vidas - 1
-            print(f"Errou a palavra! Voce perdeu um membro resta apenas: {vidas} ")
+            print(f"Errou a palavra!, Voce perdeu um membro resta apenas: {vidas} ")
             if vidas == 0:
-                print("Voce perdeu todas as suas vidas. fim de jogo ! ")
+                print("Voce perdeu todas as suas vidas. FIM DE JOGO ! ")
                 break
-            continue
-        if letra_valida(letra) == False:
-            print("Apenas permitido LETRAS")
             continue
 
         if letra in palavra_aleatoria:
-            revelar_letra(letra, palavra_aleatoria, palavra_oculta)
+
+            for i in range(len(palavra_aleatoria)):
+                if letra == palavra_aleatoria[i]:
+                    palavra_oculta[i] = letra
         else:
             vidas = vidas - 1
             print(f"Errou!, Voce perdeu um membro resta apenas: {vidas} ")
             if vidas == 0:
-                print("Voce perdeu todas as suas vidas. fim de jogo! ")
+                print("Voce perdeu todas as suas vidas. FIM DE JOGO ! ")
                 break
 
         if "_" not in palavra_oculta:
             print("Você acertou a palavra!")
             mostrar_palavra(palavra_oculta)
             break
-
-    reiniciar = input("Quer jogar de novo? (S/n): ").lower()
+    reiniciar = input("Quer jogar de novo? (s/n): ").lower()
     if reiniciar != "s":
         break
-=======
-vidas = 6
-palavras = ["banana", "maça", "abacaxi", "limao", "mamao", "pera", "melancia", "uva"]
-
-palavra_aleatoria = choice(palavras)
-palavra_oculta = ["_"] * len(palavra_aleatoria)
-
-while True:
-
-    print(" ".join(palavra_oculta))
-
-    letra = input("Digite uma letra da palavra: ")
-    if letra not in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ':
-        print("Apenas permitido LETRAS")
-        continue
-
-    if letra in palavra_aleatoria:
-
-        for i in range(len(palavra_aleatoria)):
-            if letra == palavra_aleatoria[i]:
-                palavra_oculta[i] = letra
-
-    else:
-        vidas = vidas - 1
-        print(f"Errou!, Voce perdeu um membro resta apenas: {vidas} ")
-        if vidas == 0:
-            print("Voce perdeu todas as suas vidas. FIM DE JOGO ! ")
-
-    if "_" not in palavra_oculta:
-        print("Você acertou a palavra!")
-        print(" ".join(palavra_oculta))
-        break
->>>>>>> 71055a309ec72ccd9b661a6344a0daa69a3108ea
