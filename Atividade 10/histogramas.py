@@ -1,0 +1,135 @@
+import pygame
+import random
+
+pygame.init()
+
+tela = pygame.display.set_mode((800, 600))
+pygame.display.set_caption("Histogramas")
+relogio = pygame.time.Clock()
+fonte = pygame.font.SysFont("arial", 18)
+
+BRANCO = (255, 255, 255)
+PRETO = (0, 0, 0)
+CINZA = (200, 200, 200)
+
+
+def gerar_cores(quantidade):
+    cores = []
+    for i in range(quantidade):
+        cores.append((random.randint(50, 255), random.randint(50, 255), random.randint(50, 255)))
+    return cores
+def contar_por_faixa(lista, faixas):
+    contagens = []
+    for faixa in faixas:
+        total = 0
+        for numero in lista:
+            if numero >= faixa[0] and numero <= faixa[1]:
+                total = total + 1
+        contagens.append(total)
+    return contagens
+
+def desenhar_histograma(titulo, faixas, contagens, cores):
+    x0 = 100
+    y0 = 480
+    largura_grafico = 600
+    altura_grafico = 360
+    texto = fonte.render(titulo, True, PRETO)
+    tela.blit(texto, (300, 20))
+
+    maior = 0
+    for c in contagens:
+        if c > maior:
+            maior = c
+    passo = maior // 10 + 1
+    topo = passo * 10
+
+    pygame.draw.line(tela, PRETO, (x0, y0), (x0 + largura_grafico, y0), 2)
+    pygame.draw.line(tela, PRETO, (x0, y0), (x0, y0 - altura_grafico), 2)
+
+    for i in range(11):
+        y = y0 - i * altura_grafico / 10
+        pygame.draw.line(tela, PRETO, (x0 - 5, y), (x0, y), 2)
+        texto = fonte.render(str(i * passo), True, PRETO)
+        tela.blit(texto, (x0 - 40, y - 10))
+    largura_barra = largura_grafico / len(faixas)
+    for i in range(len(faixas)):
+        x = x0 + i * largura_barra
+        altura = contagens[i] * altura_grafico / topo
+        pygame.draw.rect(tela, cores[i], (x, y0 - altura, largura_barra, altura))
+        pygame.draw.rect(tela, PRETO, (x, y0 - altura, largura_barra, altura), 1)
+
+        meio = x + largura_barra / 2
+        pygame.draw.line(tela, PRETO, (meio, y0), (meio, y0 + 5), 2)
+        texto = fonte.render(str(faixas[i][0]) + "-" + str(faixas[i][1]), True, PRETO)
+        tela.blit(texto, (meio - 20, y0 + 10))
+
+lista1 = []
+for i in range(60):
+    lista1.append(random.randint(0, 100))
+faixas1 = [[0, 19], [20, 39], [40, 59], [60, 79], [80, 100]]
+contagens1 = contar_por_faixa(lista1, faixas1)
+cores1 = gerar_cores(5)
+lista_estatica = [3, 15, 22, 8, 47, 51, 66, 72, 90, 12,34, 29, 58, 61, 77, 85, 95, 5, 41, 38,19, 27, 63, 70, 88, 99, 10, 45, 53, 67,80, 92, 2, 31, 49, 56, 74, 83, 97, 25]
+faixas2 = [[0, 24], [25, 49], [50, 74], [75, 100]]
+restante = len(lista_estatica)
+contagens2 = []
+for i in range(4):
+    quantidade = random.randint(0, 13)
+    if quantidade > restante:
+        quantidade = restante
+    contagens2.append(quantidade)
+    restante = restante - quantidade
+cores2 = gerar_cores(4)
+lista3 = []
+faixas3 = [[0, 33], [34, 66], [67, 100]]
+cores3 = gerar_cores(3)
+texto_digitado = ""
+
+tela_atual = 1
+rodando = True
+
+while rodando:
+    for evento in pygame.event.get():
+        if evento.type == pygame.QUIT:
+            rodando = False
+
+        if evento.type == pygame.KEYDOWN:
+            if evento.key == pygame.K_RIGHT:
+                tela_atual = tela_atual + 1
+                if tela_atual > 3:
+                    tela_atual = 1
+            elif evento.key == pygame.K_LEFT:
+                tela_atual = tela_atual - 1
+                if tela_atual < 1:
+                    tela_atual = 3
+            elif tela_atual == 3:
+                if evento.key == pygame.K_RETURN:
+                    if texto_digitado != "":
+                        numero = int(texto_digitado)
+                        if numero <= 100:
+                            lista3.append(numero)
+                        texto_digitado = ""
+                elif evento.key == pygame.K_BACKSPACE:
+                    texto_digitado = ""
+                elif evento.unicode != "" and evento.unicode in "0123456789":
+                    if len(texto_digitado) < 3:
+                        texto_digitado = texto_digitado + evento.unicode
+    tela.fill(BRANCO)
+    if tela_atual == 1:
+        desenhar_histograma("Histograma 1 - Lista aleatoria", faixas1, contagens1, cores1)
+    elif tela_atual == 2:
+        desenhar_histograma("Histograma 2 - Lista estatica", faixas2, contagens2, cores2)
+    elif tela_atual == 3:
+        contagens3 = contar_por_faixa(lista3, faixas3)
+        desenhar_histograma("Histograma 3 - Seus numeros", faixas3, contagens3, cores3)
+        pygame.draw.rect(tela, CINZA, (100, 60, 100, 30))
+        texto = fonte.render(texto_digitado, True, PRETO)
+        tela.blit(texto, (108, 65))
+        texto = fonte.render("Digite um numero (0 a 100) e aperte Enter", True, PRETO)
+        tela.blit(texto, (220, 65))
+    texto = fonte.render("<  " + str(tela_atual) + "/3  >", True, PRETO)
+    tela.blit(texto, (360, 560))
+    pygame.display.flip()
+    relogio.tick(30)
+
+pygame.quit()
