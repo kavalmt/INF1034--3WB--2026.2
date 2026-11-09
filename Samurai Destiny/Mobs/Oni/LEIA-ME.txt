@@ -1,0 +1,38 @@
+ONI 2D PIXEL ART - Samurai Destiny
+==================================
+
+Personagem original criado para o jogo Samurai Destiny.
+
+PASTAS
+------
+Sprites/with_outline     -> sprites com contorno preto
+Sprites/without_outline  -> sprites sem contorno
+Previews                 -> GIFs para ver as animacoes
+
+TAMANHO DE CADA QUADRO: 96 x 64 pixels
+Todos os quadros de cada animacao ficam lado a lado, em uma linha so.
+O Oni olha para a DIREITA (use pygame.transform.flip para virar).
+
+ANIMACOES
+---------
+oni_idle.png    6 quadros   parado, respirando
+oni_walk.png    8 quadros   andando com o porrete no ombro
+oni_attack.png  9 quadros   levanta o porrete e bate no chao
+                            -> o golpe acerta nos quadros 6 e 7
+oni_hurt.png    4 quadros   pisca branco e recua (1o golpe do samurai)
+oni_death.png  14 quadros   cai para tras e explode (2o golpe)
+                            quadros 1-7: queda
+                            quadro 8: pisca branco
+                            quadros 9-14: explosao e fumaca
+
+COMO CORTAR NO PYGAME
+---------------------
+def cortar_quadros(caminho, quantidade):
+    imagem = pygame.image.load(caminho).convert_alpha()
+    quadros = []
+    for i in range(quantidade):
+        quadro = imagem.subsurface((i * 96, 0, 96, 64))
+        quadros.append(quadro)
+    return quadros
+
+andar = cortar_quadros("Sprites/with_outline/oni_walk.png", 8)
