@@ -8,6 +8,7 @@ ALTURA = 1080
 tela = pygame.display.set_mode((LARGURA, ALTURA))
 pygame.display.set_caption("Samurai Destiny")
 relogio = pygame.time.Clock()
+
 #fundo
 fundo = pygame.image.load("Samurai Destiny/Fundo/fundo_dia.png").convert()
 
@@ -17,7 +18,7 @@ TAMANHO_QUADRO = 96
 ESCALA = 3
 
 
-# lista de recorte com os sprites e sheets
+# lista de recorte com os sprites e sheets ( 10 cortes , 960/96 = 10)
 def cortar_quadros(caminho):
     imagem = pygame.image.load(caminho).convert_alpha()
     # descubro quantos quadros tem dividindo a largura da imagem por 96
@@ -25,6 +26,7 @@ def cortar_quadros(caminho):
     quadros = []
     for i in range(quantidade):
         x = i * TAMANHO_QUADRO
+        #reCORTO CADA UM QUADRO E GUARDO NUMA LISTA (subsurface)
         quadro = imagem.subsurface((x, 0, TAMANHO_QUADRO, TAMANHO_QUADRO))
         # reajuste do quadro para o tamanho da tela 
         quadro = pygame.transform.scale(quadro, (TAMANHO_QUADRO * ESCALA, TAMANHO_QUADRO * ESCALA))
@@ -68,7 +70,7 @@ while rodando:
         olhando_direita = False
         andando = True
 
-    if teclas[pygame.K_d] or teclas[pygame.K_RIGHT]:
+    elif teclas[pygame.K_d] or teclas[pygame.K_RIGHT]:
         samurai_x = samurai_x + velocidade
         olhando_direita = True
         andando = True
