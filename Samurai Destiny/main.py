@@ -37,12 +37,15 @@ def cortar_quadros(caminho):
 #animacoes 
 parado = cortar_quadros("Samurai Destiny/Samurai/IDLE.png")
 correndo = cortar_quadros("Samurai Destiny/Samurai/RUN.png")
+ataque = cortar_quadros("Samurai Destiny/Samurai/ATTACK 1.png")
+
 
 # Posicao do samurai na tela
 samurai_x = 800
 samurai_y = 720          # se ele ficar flutuando ou afundado no chao, ajusto esse numero
 velocidade = 8           # quantos pixels ele anda a cada volta do loop
 olhando_direita = True   # para saber se preciso espelhar a imagem
+atacando = False   # True enquanto o samurai esta no meio do ataque
 
 # Controle da animacao
 animacao = parado        # qual lista de quadros esta sendo mostrada
@@ -60,6 +63,13 @@ while rodando:
         if evento.type == pygame.KEYDOWN:
             if evento.key == pygame.K_ESCAPE:
                 rodando = False
+ #Espaco: comeca o ataque (se ja nao estiver atacando)
+            if evento.key == pygame.K_SPACE and not atacando:
+                atacando = True
+        # Clique com o botao esquerdo do mouse tambem ataca
+        if evento.type == pygame.MOUSEBUTTONDOWN:
+            if evento.button == 1 and not atacando:
+                atacando = True
 
     # teclas apertadas A D 
     teclas = pygame.key.get_pressed()
@@ -81,23 +91,36 @@ while rodando:
     if samurai_x > LARGURA - TAMANHO_QUADRO * ESCALA:
         samurai_x = LARGURA - TAMANHO_QUADRO * ESCALA
 
-    # ANIMACAO: escolho a animacao certa
-    if andando:
+     # Escolho a animacao certa (o ataque tem prioridade)
+    if atacando:
+        nova_animacao = ataque
+    elif andando:
         nova_animacao = correndo
     else:
         nova_animacao = parado
+
     # Se mudou de animacao, comeco do primeiro quadro
     if nova_animacao != animacao:
         animacao = nova_animacao
         quadro_atual = 0
         contador = 0
-    # A cada 5 voltas do loop passo para o proximo quadro
+
+    # O ataque troca de quadro mais rapido que as outras animacoes
+    if atacando:
+        tempo_quadro = 2
+    else:
+        tempo_quadro = 5
+
+    # A cada "tempo_quadro" voltas do loop passo para o proximo quadro
     contador = contador + 1
-    if contador >= 5:
+    if contador >= tempo_quadro:
         contador = 0
         quadro_atual = quadro_atual + 1
         if quadro_atual >= len(animacao):
             quadro_atual = 0
+            # Se era o ataque, ele acabou: volta ao normal
+            if atacando:
+                atacando = False
             
     # desenho do fundo primeiro dps o samurai
     tela.blit(fundo, (0, 0))
